@@ -1,7 +1,7 @@
-let canvasWidth = 3000;
-let canvasHeight = 1000;
-let width = 150;
-let height = 150;
+let canvasWidth = 1000;
+let canvasHeight = 400;
+let width = 50;
+let height = 50;
 let x = (canvasWidth / 2) -( width / 2 );
 let y = 100;
 let mouseCoordArray = [];
