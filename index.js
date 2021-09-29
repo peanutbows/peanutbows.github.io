@@ -15,6 +15,7 @@ let gravity = 1.5;
 let wallElastisty = 1.8;
 let wallFriction = 0.02;
 let peanutIsFrozen = true;
+let timeFactor = 1;
 
 function setup() {
     var canvas = createCanvas(canvasWidth, canvasHeight);
@@ -114,7 +115,7 @@ function draw() {
     {
       if(mouseCoordArray.length == 0 && mouse_in_boundry())
       {
-        mouseCoordArray[0] = [mouseX, mouseY];
+        mouseCoordArray[0] = [mouseX - x, mouseY - y];
         infoString = infoString.concat(" MousePressX: ");
         infoString = infoString.concat(mouseCoordArray[0][0]);
         infoString = infoString.concat(" MousePressY: ");
@@ -124,8 +125,9 @@ function draw() {
       
       if(mouseCoordArray.length >= 1)
       {
-        mouseCoordArray[1] = [mouseX, mouseY];
-        line(mouseCoordArray[0][0], mouseCoordArray[0][1], mouseCoordArray[1][0], mouseCoordArray[1][1]);
+        timeFactor = 0.01;
+        mouseCoordArray[1] = [mouseX - x, mouseY - y];
+        
         let forceX = mouseCoordArray[0][0] - mouseCoordArray[1][0]; 
         let forceY = mouseCoordArray[0][1] - mouseCoordArray[1][1];
         let totalForce = Math.sqrt(Math.pow(forceX, 2) + Math.pow(forceY, 2));
@@ -148,10 +150,13 @@ function draw() {
 
 
       }
+
+      
       
   }
   else
-  {
+  { 
+    timeFactor = 1;
     if(mouseCoordArray.length >= 1)
     {
       peanutIsFrozen = false;
@@ -170,15 +175,14 @@ function draw() {
   if(!peanutIsFrozen)
   {
     accelY += gravity;
-    speedX += accelX;
-    speedY += accelY;
+    speedX += accelX * timeFactor;
+    speedY += accelY * timeFactor;
     accelY = 0;
     accelX = 0;
     
-    // speedX += speedX * 2 *  collXNorm;
-    // speedY += speedY * 2 *  collYNorm;
-    x += speedX;
-    y += speedY;
+    
+    x += speedX * timeFactor;
+    y += speedY * timeFactor;
     let coll = collision();
     let collNegativeX = (Math.abs(coll[0]) / -1 );
     let collNegativeY = (Math.abs(coll[1]) / -1 );
@@ -192,6 +196,10 @@ function draw() {
   }
   
   image(img,x,y,width,height);
+  if(mouseIsPressed && mouseCoordArray.length >= 1)
+  {
+    line(mouseCoordArray[0][0] + x, mouseCoordArray[0][1] + y, mouseCoordArray[1][0] + x, mouseCoordArray[1][1] + y);
+  }
 
   // Uncomment for debug mode.
   //fill(255);
